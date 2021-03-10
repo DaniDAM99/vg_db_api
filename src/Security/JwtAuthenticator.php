@@ -49,9 +49,9 @@ class JwtAuthenticator extends AbstractGuardAuthenticator {
                             $this->params->get('jwt_secret'),
                             ['HS256']
             );
-
-            return $this->em->getRepository(Usuario::class)
+            $usuario = $this->em->getRepository(Usuario::class)
                             ->findOneBy(['email' => $jwt['usuario']]);
+            return $usuario;
         } catch (\Exception $exception) {
             throw new AuthenticationException($exception->getMessage());
         }

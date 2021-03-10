@@ -67,7 +67,6 @@ class Usuario implements UserInterface
 
         return $this;
     }
-
     /**
      * A visual identifier that represents this user.
      *
@@ -75,7 +74,7 @@ class Usuario implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
