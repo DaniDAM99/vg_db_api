@@ -18,10 +18,6 @@ security:
             anonymous: true
             lazy: true
             provider: app_user_provider
-            pattern: ^/listas
-            guard:
-                authenticators:
-                    - App\Security\JwtAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

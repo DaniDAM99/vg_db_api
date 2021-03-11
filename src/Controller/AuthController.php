@@ -39,16 +39,16 @@ class AuthController extends AbstractController {
         $em->flush();
         return new JsonResponse(['respuesta' => 'Usuario añadido correctamente'], Response::HTTP_OK);
     }
-
+    
     /**
      * @Route("/usuarios", name="obtener_usuario", methods={"GET"})
      */
     public function get_usuario(Request $request, ParameterBagInterface $params, UserProviderInterface $userProvider) {
         $em = $this->getDoctrine()->getManager();
         $auth = new JwtAuthenticator($em, $params);
-                
+
         $credenciales = $auth->getCredentials($request);
-        
+
         $usuario = $auth->getUser($credenciales, $userProvider);
         if ($usuario) {
 
@@ -59,6 +59,54 @@ class AuthController extends AbstractController {
             ];
 
             return new JsonResponse($data, Response::HTTP_OK);
+        }
+        return new JsonResponse(['error' => 'Usuario no logueado'], Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @Route("/usuarios", name="update_usuario", methods={"PUT"})
+     */
+    public function update_usuario(Request $request, ParameterBagInterface $params, UserProviderInterface $userProvider) {
+        $em = $this->getDoctrine()->getManager();
+        $auth = new JwtAuthenticator($em, $params);
+
+        $credenciales = $auth->getCredentials($request);
+
+        $usuario = $auth->getUser($credenciales, $userProvider);
+
+        if ($usuario) {
+            $data = json_decode($request->getContent(), true);
+            $username = $data['username'];
+            $pwd = $data['password'];
+
+            if (!empty($username)) {
+                $usuario->setUsername($username);
+            }
+            if (!empty($password)) {
+                $usuario->setPassword(password_hash($password, PASSWORD_BCRYPT));
+            }
+            $em->persist($usuario);
+            $em->flush();
+            return new JsonResponse(['respuesta' => 'Usuario modificado correctamente'], Response::HTTP_OK);
+        }
+        return new JsonResponse(['error' => 'Usuario no logueado'], Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @Route("/usuarios", name="eliminar_usuario", methods={"DELETE"})
+     */
+    public function delete_usuario(Request $request, ParameterBagInterface $params, UserProviderInterface $userProvider) {
+        $em = $this->getDoctrine()->getManager();
+        $auth = new JwtAuthenticator($em, $params);
+
+        $credenciales = $auth->getCredentials($request);
+
+        $usuario = $auth->getUser($credenciales, $userProvider);
+
+        if ($usuario) {
+            $em->remove($usuario);
+            $em->flush();
+            return new JsonResponse(['respuesta' => 'Usuario eliminado correctamente'], Response::HTTP_OK);
         }
         return new JsonResponse(['error' => 'Usuario no logueado'], Response::HTTP_UNAUTHORIZED);
     }
