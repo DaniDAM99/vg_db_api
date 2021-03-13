@@ -4,8 +4,7 @@ API hecha con Symfony y JWT
 ## Instalación
 
 ### Instalar Symfony y Composer
-
-Ya que el proyecto usa Symfony hay que instalar Symfony y Composer<br>
+PAra poder ejecutar el proyecto hay que instalar Symfony y Composer<br>
 Symfony: https://symfony.com/download<br>
 Composer: https://getcomposer.org/download/
 
