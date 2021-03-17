@@ -74,13 +74,15 @@ class JuegoController extends AbstractController {
      * @Route("/juegos", name="add_juego", methods={"POST"})
      */
     public function add_juego(Request $request): JsonResponse {
-        $data = $json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
         $nombre = $data['nombre'];
         $fecha_lanzamiento = $data['fecha_lanzamiento'];
         $genero = $data['genero'];
         $plataforma = $data['plataforma'];
 
+        $fecha_lanzamiento = str_replace("-", "/", $fecha_lanzamiento);
+        
         if (empty($nombre)) {
             return new JsonResponse(['error' => 'Faltan parámetros'], Response::HTTP_PARTIAL_CONTENT);
         }
@@ -89,7 +91,7 @@ class JuegoController extends AbstractController {
         $juego->setNombre($nombre);
         $juego->setGenero($genero);
         if ($fecha_lanzamiento) {
-            $juego->setFechaLanzamiento(DateTime::createFromFormat('d/m/Y', $fecha_lanzamiento));
+            $juego->setFechaLanzamiento(DateTime::createFromFormat('Y/m/d', $fecha_lanzamiento));
         }
         $juego->setPlataforma($plataforma);
 
